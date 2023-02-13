@@ -32,7 +32,7 @@ us_lke_cluster = [
 /****************************************/
 eu_lke_cluster = [
     {
-        label : "region_manager_lke_cluster"
+        label : "eu_lke_cluster"
         k8s_version : "1.25"
         region : "eu-west"
         pools = [
