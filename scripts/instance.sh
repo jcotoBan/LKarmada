@@ -17,13 +17,6 @@ apt-get install git -y
 git init && git pull https://github.com/jcotoBan/LKarmada.git
 chmod +x clean.sh
 
-#install helm
-curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-apt-get install apt-transport-https --yes
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-apt-get update -y
-apt-get install helm -y
-
 #Install terraform
 
 apt-get update &&  apt-get install -y gnupg software-properties-common
@@ -38,6 +31,13 @@ apt-get update && apt-get install -y ca-certificates curl && curl -fsSLo /usr/sh
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" |  tee /etc/apt/sources.list.d/kubernetes.list
 apt-get update && apt-get install -y kubectl
 
+#install helm
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+apt-get update -y
+apt-get install helm -y
+
 #Terraform Setup
 
 echo 'export TF_VAR_token="<replace with your Linode token>"' >> .bashrc #Inserting your linode token as an env variable on remote host.
@@ -48,10 +48,8 @@ terraform -chdir=clusterstf init
 terraform -chdir=clusterstf plan \
  -var-file="clusters.tfvars"
 
-
- terraform apply -chdir=clusterstf -auto-approve \
+ terraform  -chdir=clusterstf apply -auto-approve \
  -var-file="clusters.tfvars"
-
  
 #Kubernetes clusters setup
 
@@ -61,8 +59,6 @@ echo 'export KUBE_VAR="$(terraform output kubeconfig_eu)"' >> .bashrc && source 
 echo 'export KUBE_VAR="$(terraform output kubeconfig_ap)"' >> .bashrc && source .bashrc && echo $KUBE_VAR | base64 -di > kubeconfig_ap.yaml
 echo 'alias k=kubectl' >> .bashrc
 source .bashrc
-
-
 
 
 #Karmada setup
