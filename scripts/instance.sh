@@ -40,7 +40,7 @@ apt-get update && apt-get install -y kubectl
 
 #Terraform Setup
 
-echo 'export TF_VAR_token="106cc7f63d02bd762ffb7256965b959c9f942fabb6b9451ea264004d44ba9336"' >> .bashrc #Inserting your linode token as an env variable on remote host.
+echo 'export TF_VAR_token="<replace with your Linode token>"' >> .bashrc #Inserting your linode token as an env variable on remote host.
 source .bashrc
 
 terraform -chdir=clusterstf init
