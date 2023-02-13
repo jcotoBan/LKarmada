@@ -62,6 +62,9 @@ source .bashrc
 
 
 #Karmada setup
+
+helm repo add karmada-charts 
+
 echo 'export KCIP=$(kubectl get nodes -o jsonpath="{.items[*].status.addresses[?(@.type=='ExternalIP')].address}" --kubeconfig=kubeconfig_cluster_manager.yaml)' \
 >> .bashrc && source .bashrc
 
