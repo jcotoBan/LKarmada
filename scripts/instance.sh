@@ -67,7 +67,7 @@ echo 'export KCIP=$(kubectl get nodes -o jsonpath="{.items[*].status.addresses[?
 
 #Karmada master
 helm install karmada karmada-charts/karmada \
---kubeconfig=kubeconfig-cluster-manager \
+--kubeconfig=kubeconfig_cluster_manager.yaml \
 --create-namespace --namespace karmada-system \
 --version=1.2.0 \
 --set apiServer.hostNetwork=false \
