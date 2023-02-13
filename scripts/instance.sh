@@ -14,7 +14,7 @@ systemctl restart sshd
 #Git Install
 apt-get update
 apt-get install git -y
-git init && git pull <place repo>
+git init && git pull https://github.com/jcotoBan/LKarmada.git
 chmod +x clean.sh
 
 #install helm
