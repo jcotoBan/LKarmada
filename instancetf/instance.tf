@@ -21,7 +21,7 @@ private_ip = true
 authorized_keys = [linode_sshkey.workshop_key.ssh_key]
 
   provisioner "file"{
-    source = "./scripts/instance.sh"
+    source = "../scripts/instance.sh"
     destination = "/tmp/instance.sh"
     connection {
       type = "ssh"
