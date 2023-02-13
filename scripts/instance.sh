@@ -40,7 +40,7 @@ apt-get install helm -y
 
 #Terraform Setup
 
-echo 'export TF_VAR_token="<replace with your Linode token>"' >> .bashrc #Inserting your linode token as an env variable on remote host.
+echo 'export LINODE_TOKEN="<replace with your Linode token>"' >> .bashrc #Inserting your linode token as an env variable on remote host.
 source .bashrc
 
 terraform -chdir=clusterstf init
@@ -53,10 +53,10 @@ terraform -chdir=clusterstf plan \
  
 #Kubernetes clusters setup
 
-echo 'export KUBE_VAR="$(terraform output kubeconfig_cluster_manager)"' >> .bashrc && source .bashrc && echo $KUBE_VAR | base64 -di > kubeconfig_cluster_manager.yaml
-echo 'export KUBE_VAR="$(terraform output kubeconfig_us)"' >> .bashrc && source .bashrc && echo $KUBE_VAR | base64 -di > kubeconfig_us.yaml
-echo 'export KUBE_VAR="$(terraform output kubeconfig_eu)"' >> .bashrc && source .bashrc && echo $KUBE_VAR | base64 -di > kubeconfig_eu.yaml
-echo 'export KUBE_VAR="$(terraform output kubeconfig_ap)"' >> .bashrc && source .bashrc && echo $KUBE_VAR | base64 -di > kubeconfig_ap.yaml
+echo 'export KUBE_VAR="$(terraform output -state=./clusterstf/terraform.tfstate kubeconfig_cluster_manager)"' >> .bashrc && source .bashrc && echo $KUBE_VAR | base64 -di > kubeconfig_cluster_manager.yaml
+echo 'export KUBE_VAR="$(terraform output -state=./clusterstf/terraform.tfstate kubeconfig_us)"' >> .bashrc && source .bashrc && echo $KUBE_VAR | base64 -di > kubeconfig_us.yaml
+echo 'export KUBE_VAR="$(terraform output -state=./clusterstf/terraform.tfstate kubeconfig_eu)"' >> .bashrc && source .bashrc && echo $KUBE_VAR | base64 -di > kubeconfig_eu.yaml
+echo 'export KUBE_VAR="$(terraform output -state=./clusterstf/terraform.tfstate kubeconfig_ap)"' >> .bashrc && source .bashrc && echo $KUBE_VAR | base64 -di > kubeconfig_ap.yaml
 echo 'alias k=kubectl' >> .bashrc
 source .bashrc
 
