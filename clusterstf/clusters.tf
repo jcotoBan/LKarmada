@@ -6,11 +6,6 @@ terraform {
   }
 }
 
-//Use the Linode Provider
-provider "linode" {
-  token = var.token
-}
-
 //Karmada manager cluster
 
 resource "linode_lke_cluster" "manager_cluster" {
