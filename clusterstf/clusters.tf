@@ -96,3 +96,9 @@ output "kubeconfig_ap" {
    value = linode_lke_cluster.ap_lke_cluster.kubeconfig
    sensitive = true
 }
+
+
+variable "region_manager_lke_cluster"{}
+variable "us_lke_cluster"{}
+variable "eu_lke_cluster"{}
+variable "ap_lke_cluster"{}
