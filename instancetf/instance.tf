@@ -21,8 +21,8 @@ private_ip = true
 authorized_keys = [linode_sshkey.workshop_key.ssh_key]
 
   provisioner "file"{
-    source = "./labsetup.sh"
-    destination = "/tmp/labsetup.sh"
+    source = "./scripts/instance.sh"
+    destination = "/tmp/instance.sh"
     connection {
       type = "ssh"
       host = self.ip_address
@@ -33,8 +33,8 @@ authorized_keys = [linode_sshkey.workshop_key.ssh_key]
 
   provisioner "remote-exec"{
     inline = [
-      "chmod +x /tmp/labsetup.sh",
-      "/tmp/labsetup.sh",
+      "chmod +x /tmp/instance.sh",
+      "/tmp/instance.sh",
       "sleep 1"
     ]
     connection {
