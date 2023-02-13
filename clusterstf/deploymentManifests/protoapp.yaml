@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: protoapp
+spec:
+ replicas: 3
+ selector:
+   matchLabels:
+     app: protoapp
+ template:
+   metadata:
+     labels:
+       app: protoapp
+   spec:
+     containers:
+       - image: koton00beng/protoapp
+         name: protoappcont
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: protoappsvc
+spec:
+ ports:
+   - port: 5000
+     targetPort: 5000
+ selector:
+   app: protoapp
