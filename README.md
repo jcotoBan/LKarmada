@@ -54,6 +54,10 @@ Look for folder named instancetf, and add your root password and Linode API toke
 
 Then, look for folder scripts and on line 42 of the instance.sh file add your Linode API token. 
 
+As stated earlier, on ssh-keys folder you will find generic ssh-keys, you can replace them with your own. Just make sure they are in the same location and they are named workshopK and workshopK.pub
+
+If change the name or the location, make sure to update workshop_key resource on instance.tf file (lines 51 to 54).
+
 Finally, making sure your are inside of instancetf folder, run the following command:
 
 ```
@@ -64,10 +68,30 @@ Wait some time until your instance and all the clusters are created.
 
 ### 2-Setting up karmada
 
+First, login to your Linode instance. Look for the IP address of the instance labeled as "workshopInstance".  
 
+Then, to login, issue the following command:
 
 ```
-#Karmada master
+ssh -i ../ssh-keys/workshopK k8s_admin@<your linode IP>
+```
+
+From there, proceed to login as root and then go to the root home path:
+
+```
+sudo su
+```
+
+```
+cd ~
+```
+The first Karmada component we are going to install is the karmada server/manager. By using helm we will install the karmada chart on our region_manager_lke_cluster, it will be created with specific values, more important ones:
+
+--namespace: karmada-system, in which the related objects will reside.  
+--service type and port: NodePort and port will be 32443, which means it will be make available on each worker node public ip on that specific port.  
+--certs.auto.hosts[6]: As part of the setup, we need to pass the public ip of the node where the chart resides, in this case a file that was prepared during the first part of this setup.
+
+```
 helm install karmada karmada-charts/karmada \
 --kubeconfig=kubeconfig_cluster_manager.yaml \
 --create-namespace --namespace karmada-system \
