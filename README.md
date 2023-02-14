@@ -16,14 +16,21 @@ The steps to be performed are:
 
 1) From a local workstation or laptop, trigger a terraform tenplate that will create the following:  
 
-1.1) A simple Linode instance from which we will manage the clusters. It does some hardening as disabling ssh root login and creating a custom user name k8s_admin with sudo access. Some generic ssh keys are included, however it is strongly recommended to setup your own.  
+--A simple Linode instance from which we will manage the clusters. It does some hardening as disabling ssh root login and creating a custom user name k8s_admin with sudo access. Some generic ssh keys are included, however it is strongly recommended to setup your own.  
 
-1.3 LKE cluster manager that will manage 3 cluster on 3 diferent regions, this one will be on us-west.  
-1.4 3 LKE agent clusters that will be the ones in which we will directly setup our workloads, each on a different region:  
+--LKE cluster manager that will manage 3 cluster on 3 diferent regions, this one will be on us-west.  
+
+--3 LKE agent clusters that will be the ones in which we will directly setup our workloads, each on a different region:  
     *us-west  
     *eu-west  
     *ap-south  
 
+--Some preparation for the Karmada setup.  
+
+2) Setup everything related to karmada to start managing the clusters.
+
+
+3) 
 
 
 ```
