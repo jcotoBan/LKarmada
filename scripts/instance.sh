@@ -15,7 +15,6 @@ systemctl restart sshd
 apt-get update
 apt-get install git -y
 git init && git pull https://github.com/jcotoBan/LKarmada.git
-chmod +x clean.sh
 
 #Install terraform
 
@@ -23,7 +22,7 @@ apt-get update &&  apt-get install -y gnupg software-properties-common
 apt-get install wget -y
 wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor |  tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" |  tee /etc/apt/sources.list.d/hashicorp.list
-apt update &&  apt-get install terraform
+apt update && apt-get install terraform
 
 #Install kubectl 
 
@@ -40,7 +39,7 @@ apt-get install helm -y
 
 #Terraform Setup
 
-echo 'export LINODE_TOKEN="<replace with your Linode token>"' >> .bashrc #Inserting your linode token as an env variable on remote host.
+echo 'export LINODE_TOKEN="38a26ebc589ea4d7c03e766ee7a9287629fecbb92980f1e67d35212b1c1b663c"' >> .bashrc #Inserting your linode token as an env variable on remote host.
 source .bashrc
 
 terraform -chdir=clusterstf init
@@ -48,8 +47,10 @@ terraform -chdir=clusterstf init
 terraform -chdir=clusterstf plan \
  -var-file="clusters.tfvars"
 
- terraform  -chdir=clusterstf apply -auto-approve \
+
+ terraform -chdir=clusterstf apply -auto-approve \
  -var-file="clusters.tfvars"
+
  
 #Kubernetes clusters setup
 
@@ -63,81 +64,6 @@ source .bashrc
 
 #Karmada setup
 
-helm repo add karmada-charts https://raw.githubusercontent.com/karmada-io/karmada/master/charts
+helm repo add karmada-charts https://raw.githubusercontent.com/karmada-io/karmada/master/charts 
 
-echo 'export KCIP="$(kubectl get nodes -o jsonpath="{.items[*].status.addresses[?(@.type=='ExternalIP')].address}" --kubeconfig=kubeconfig_cluster_manager.yaml)"' \
->> .bashrc && source .bashrc
-
-#Karmada master
-helm install karmada karmada-charts/karmada \
---kubeconfig=kubeconfig_cluster_manager.yaml \
---create-namespace --namespace karmada-system \
---version=1.2.0 \
---set apiServer.hostNetwork=false \
---set apiServer.serviceType=NodePort \
---set apiServer.nodePort=32443 \
---set certs.auto.hosts[0]="kubernetes.default.svc" \
---set certs.auto.hosts[1]="*.etcd.karmada-system.svc.cluster.local" \
---set certs.auto.hosts[2]="*.karmada-system.svc.cluster.local" \
---set certs.auto.hosts[3]="*.karmada-system.svc" \
---set certs.auto.hosts[4]="localhost" \
---set certs.auto.hosts[5]="127.0.0.1" \
---set certs.auto.hosts[6]=$KCIP #Using ip of the cluster manager node
-
-kubectl get secret karmada-kubeconfig \
- --kubeconfig=kubeconfig_cluster_manager.yaml \
- -n karmada-system \
- -o jsonpath={.data.kubeconfig} | base64 -d > karmada_config
-
- sed -i "s|https://karmada-apiserver.karmada-system.svc.cluster.local:5443|https://$KCIP:32443|g" karmada_config
-
-kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..cluster.certificate-authority-data}' | base64 -d > caCrt.pem
-kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..user.client-certificate-data}' | base64 -d crt.pem
-kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..user.client-key-data}' | base64 -d key.pem
-
-#Installing the agent on each regional cluster
-
-#To pass the master certificates to the agent helm installation it is required to pass them on values file 
-echo "agent:" >> values.yaml
-echo "  kubeconfig:" >> values.yaml
-echo "    caCrt: |" >> values.yaml
-cat caCrt.pem | sed 's/^/      /' >> values.yaml
-echo "    crt: |" >> values.yaml
-cat crt.pem | sed 's/^/      /' >> values.yaml
-echo "    key: |" >> values.yaml
-cat key.pem | sed 's/^/      /' >> values.yaml
-
-#us agent cluster install
-helm install karmada karmada-charts/karmada \
---kubeconfig=kubeconfig_us.yaml \  
---create-namespace --namespace karmada-system \  
---version=1.2.0 \ 
---set installMode=agent \
---set agent.clusterName=us \ 
---set agent.kubeconfig.server=https://$KCIP:32443 \ 
---values values.yaml
-
-#eu agent cluster install
-helm install karmada karmada-charts/karmada \
---kubeconfig=kubeconfig_eu.yaml \  
---create-namespace --namespace karmada-system \  
---version=1.2.0 \ 
---set installMode=agent \
---set agent.clusterName=eu \ 
---set agent.kubeconfig.server=https://$KCIP:32443 \ 
---values values.yaml
-
-#ap agent cluster install
-helm install karmada karmada-charts/karmada \
---kubeconfig=kubeconfig_ap.yaml \  
---create-namespace --namespace karmada-system \  
---version=1.2.0 \ 
---set installMode=agent \
---set agent.clusterName=ap \ 
---set agent.kubeconfig.server=https://$KCIP:32443 \ 
---values values.yaml
-
-sleep 6
-
-kubectl apply -f clusterstf/deploymentManifests/protoapp.yaml --kubeconfig=kubeconfig_cluster_manager.yaml
-kubectl apply -f clusterstf/karmadaManifests/policy.yaml --kubeconfig=kubeconfig_cluster_manager.yaml
+kubectl get nodes -o jsonpath="{.items[*].status.addresses[?(@.type==\"ExternalIP\")].address}" --kubeconfig=kubeconfig_cluster_manager.yaml > kcip.txt
