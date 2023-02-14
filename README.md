@@ -42,14 +42,24 @@ https://github.com/karmada-io/karmada
 
 ## Detailed steps
 
-1-Deploying the linode to manage the clusters as well the clusters.
+### 1-Deploying the linode to manage the clusters as well the clusters.
 
 Clone this repo:
 
-'''
+```
+git https://github.com/jcotoBan/LKarmada.git
+```
 
+Look for folder named instancetf, move your current directory inside it and run the following:
 
-'''
+```
+terraform apply -var-file="instance.tfvars"
+```
+
+Wait some time until your instance and all the clusters are created.
+
+### 2-Setting up karmada
+
 
 
 ```
