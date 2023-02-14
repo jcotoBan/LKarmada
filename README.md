@@ -50,7 +50,11 @@ Clone this repo:
 git clone https://github.com/jcotoBan/LKarmada.git
 ```
 
-Look for folder named instancetf, move your current directory inside it and run the following:
+Look for folder named instancetf, and add your root password and Linode API token to the instance.tfvars file.
+
+Then, look for folder scripts and on line 42 of the instance.sh file add your Linode API token. 
+
+Finally, making sure your are inside of instancetf folder, run the following command:
 
 ```
 terraform apply -var-file="instance.tfvars"
