@@ -14,7 +14,7 @@ Linode account with a valid api token with access to Linodes and LKE.
 
 The steps to be performed are:
 
-1) From a local workstation or laptop, trigger a terraform tenplate that will create the following:  
+1- From a local workstation or laptop, trigger a terraform tenplate that will create the following:  
 
 --A simple Linode instance from which we will manage the clusters. It does some hardening as disabling ssh root login and creating a custom user name k8s_admin with sudo access. Some generic ssh keys are included, however it is strongly recommended to setup your own.  
 
@@ -24,9 +24,9 @@ The steps to be performed are:
 
 --Some preparation for the Karmada setup.  
 
-2) Setup everything related to karmada to start managing the clusters.
+2- Setup everything related to karmada to start managing the clusters.
 
-3) Deploy a karmada policy and a sample deployment/service.
+3- Deploy a karmada policy and a sample deployment/service.
 
 
 ```
