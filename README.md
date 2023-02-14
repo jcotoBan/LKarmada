@@ -188,6 +188,18 @@ kubectl get clusters --kubeconfig=karmada_config
 ![](imgs/clustersc.jpg)
 
 
+Since the certs file have decoded sensitive data, make sure you erase them:
+
+```
+rm caCrt.pem
+rm crt.pem
+rm crt.pem
+rm values.yaml
+```
+
+Then, we will deploy a Sample app to our cluster!
+
+
 ```
 kubectl apply -f clusterstf/deploymentManifests/protoapp.yaml --kubeconfig=karmada_config
 kubectl apply -f clusterstf/karmadaManifests/policy.yaml --kubeconfig=karmada_config
