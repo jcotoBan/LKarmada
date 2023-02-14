@@ -223,10 +223,10 @@ Then, just issue the following command:
 kubectl apply -f clusterstf/karmadaManifests/policy.yaml --kubeconfig=karmada_config
 
 ```
-And finally, to get our custom app deployed, just issue:
+And finally, to get our custom app deployed, just run:
 
 ```bash
 kubectl apply -f clusterstf/deploymentManifests/protoapp.yaml --kubeconfig=karmada_config
-``
+```
 
 
