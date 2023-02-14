@@ -20,17 +20,13 @@ The steps to be performed are:
 
 --LKE cluster manager that will manage 3 cluster on 3 diferent regions, this one will be on us-west.  
 
---3 LKE agent clusters that will be the ones in which we will directly setup our workloads, each on a different region:  
-    *us-west  
-    *eu-west  
-    *ap-south  
+--3 LKE agent clusters that will be the ones in which we will directly setup our workloads, each on a different region: us-west, eu-west and ap-south.  
 
 --Some preparation for the Karmada setup.  
 
 2) Setup everything related to karmada to start managing the clusters.
 
-
-3) 
+3) Deploy a karmada policy and a sample deployment/service.
 
 
 ```
