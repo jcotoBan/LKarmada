@@ -35,7 +35,7 @@ Karmada is a sandbox project of the Cloud Native Computing Foundation (CNCF) tha
 
 https://github.com/karmada-io/karmada
 
-======================
+-----
 
 ## Detailed steps
 
