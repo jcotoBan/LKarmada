@@ -8,7 +8,7 @@ The main idea of this setup is to provide an easy to manage multiregion kubernet
 
 Requirements:
 
-A laptop or workstation or vm with terraform installed.
+A laptop or workstation or vm with terraform and git installed.
 Linode account with a valid api token with access to Linodes and LKE.
 
 
@@ -47,7 +47,7 @@ https://github.com/karmada-io/karmada
 Clone this repo:
 
 ```
-git https://github.com/jcotoBan/LKarmada.git
+git clone https://github.com/jcotoBan/LKarmada.git
 ```
 
 Look for folder named instancetf, move your current directory inside it and run the following:
