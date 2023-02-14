@@ -48,7 +48,7 @@ https://github.com/karmada-io/karmada
 
 Clone this repo:
 
-```
+```bash
 git clone https://github.com/jcotoBan/LKarmada.git
 ```
 
@@ -62,7 +62,7 @@ If change the name or the location, make sure to update workshop_key resource on
 
 Finally, making sure your are inside of instancetf folder, run the following command:
 
-```
+```bash
 terraform apply -var-file="instance.tfvars"
 ```
 
@@ -74,17 +74,17 @@ First, login to your Linode instance. Look for the IP address of the instance la
 
 Then, to login, issue the following command:
 
-```
+```bash
 ssh -i ../ssh-keys/workshopK k8s_admin@<your linode IP>
 ```
 
 From there, proceed to login as root and then go to the root home path:
 
-```
+```bash
 sudo su
 ```
 
-```
+```bash
 cd ~
 ```
 The first Karmada component we are going to install is the karmada server/manager. By using helm we will install the karmada chart on our region_manager_lke_cluster, it will be created with specific values, more important ones:
@@ -112,7 +112,7 @@ helm install karmada karmada-charts/karmada \
 
 Then, we will retrieve the kubeconfig file through which we will manage our clusters:
 
-```
+```bash
 kubectl get secret karmada-kubeconfig \
  --kubeconfig=kubeconfig_cluster_manager.yaml \
  -n karmada-system \
@@ -121,13 +121,13 @@ kubectl get secret karmada-kubeconfig \
 
 We need to do a slight change on that file, just run:
 
-```
+```bash
  sed -i "s|https://karmada-apiserver.karmada-system.svc.cluster.local:5443|https://$(cat kcip.txt):32443|g" karmada_config
 ```
 
 To add each cluster as a karmada agent, we need the certificates of the karmada manager, with this command we will get them:
 
-```
+```bash
 kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..cluster.certificate-authority-data}' | base64 -d > caCrt.pem
 kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..user.client-certificate-data}' | base64 -d > crt.pem
 kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..user.client-key-data}' | base64 -d > key.pem
@@ -135,7 +135,7 @@ kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpat
 
 The following command will add the certificate values to a yaml file called values.yaml, as it is the only way to pass the certificates to the agent chart installation without issues:
 
-```
+```bash
 echo "agent:" >> values.yaml && \
 echo "  kubeconfig:" >> values.yaml && \
 echo "    caCrt: |" >> values.yaml && \
@@ -148,7 +148,7 @@ cat key.pem | sed 's/^/      /' >> values.yaml
 
 Then, we will actually install the agent on each of the clusters. This will allow our karmada manager to start the management of our clusters. We will have to run the command for each of the 3 clusters:
 
-```
+```bash
 helm install karmada karmada-charts/karmada \
 --kubeconfig=kubeconfig_us.yaml \
 --create-namespace --namespace karmada-system \
@@ -159,7 +159,7 @@ helm install karmada karmada-charts/karmada \
 --values values.yaml
 ```
 
-```
+```bash
 helm install karmada karmada-charts/karmada \
 --kubeconfig=kubeconfig_eu.yaml \
 --create-namespace --namespace karmada-system \
@@ -170,7 +170,7 @@ helm install karmada karmada-charts/karmada \
 --values values.yaml
 ```
 
-```
+```bash
 helm install karmada karmada-charts/karmada \
 --kubeconfig=kubeconfig_ap.yaml \
 --create-namespace --namespace karmada-system \
@@ -183,7 +183,7 @@ helm install karmada karmada-charts/karmada \
 
 If everything was followed correctly, at this point you should be able to see the clusters listed from the karmada server:
 
-```
+```bash
 kubectl get clusters --kubeconfig=karmada_config
 ```
 
@@ -192,7 +192,7 @@ kubectl get clusters --kubeconfig=karmada_config
 
 Since the certs file have decoded sensitive data, make sure you erase them:
 
-```
+```bash
 rm caCrt.pem
 rm crt.pem
 rm crt.pem
@@ -219,13 +219,13 @@ resourceSelectors:
 
 Then, just issue the following command:
 
-```
+```bash
 kubectl apply -f clusterstf/karmadaManifests/policy.yaml --kubeconfig=karmada_config
 
 ```
 And finally, to get our custom app deployed, just issue:
 
-```
+```bash
 kubectl apply -f clusterstf/deploymentManifests/protoapp.yaml --kubeconfig=karmada_config
 ``
 
