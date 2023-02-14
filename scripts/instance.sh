@@ -39,7 +39,7 @@ apt-get install helm -y
 
 #Terraform Setup
 
-echo 'export LINODE_TOKEN="38a26ebc589ea4d7c03e766ee7a9287629fecbb92980f1e67d35212b1c1b663c"' >> .bashrc #Inserting your linode token as an env variable on remote host.
+echo 'export LINODE_TOKEN="<Linode API token>"' >> .bashrc #Inserting your linode token as an env variable on remote host.
 source .bashrc
 
 terraform -chdir=clusterstf init
