@@ -93,7 +93,7 @@ The first Karmada component we are going to install is the karmada server/manage
 --service type and port: NodePort and port will be 32443, which means it will be make available on each worker node public ip on that specific port.  
 --certs.auto.hosts[6]: As part of the setup, we need to pass the public ip of the node where the chart resides, in this case a file that was prepared during the first part of this setup.
 
-```
+```bash
 helm install karmada karmada-charts/karmada \
 --kubeconfig=kubeconfig_cluster_manager.yaml \
 --create-namespace --namespace karmada-system \
