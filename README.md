@@ -12,7 +12,7 @@ A laptop or workstation or vm with terraform installed.
 Linode account with a valid api token with access to Linodes and LKE.
 
 
-The steps to be performed are:
+The general steps to be performed are:
 
 ### 1- From a local workstation or laptop, trigger a terraform tenplate that will create the following:  
 
@@ -35,7 +35,18 @@ Karmada is a sandbox project of the Cloud Native Computing Foundation (CNCF) tha
 
 https://github.com/karmada-io/karmada
 
+======================
 
+## Detailed steps
+
+1-Deploying the linode to manage the clusters as well the clusters.
+
+Clone this repo:
+
+'''
+
+
+'''
 
 
 ```
