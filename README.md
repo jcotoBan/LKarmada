@@ -1,4 +1,12 @@
-# Multicluster MultiRegion with Linode kubernetes engine and Karmada.
+# Multicluster MultiRegion with LKE and Karmada.
+
+The main idea of this setup is to provide an easy to manage multiregion kubernetes cluster setup on Akamai Cloud (Linode), with the Linode Kubernetes Engine (LKE).
+
+The steps to be performed are:
+
+1-From a local workstation or laptop, trigger a terraform tenplate that will create the following:
+ --> LKE cluster manager that will manage 3 cluster on 3 diferent regions, this one will be on Freemont.
+ --> 3 LKE agent clusters that will be 
 
 
 ```
