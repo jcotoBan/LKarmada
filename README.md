@@ -38,6 +38,8 @@ https://github.com/karmada-io/karmada
 
 ## A reference diagram of what you would end up with
 
+![](imgs/architectureoverview.jpg)
+
 -----
 
 ## Detailed steps
