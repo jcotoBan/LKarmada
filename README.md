@@ -5,12 +5,21 @@ MultiCluster MultiRegion with LKE and Karmada.
 
 The main idea of this setup is to provide an easy to manage multiregion kubernetes cluster setup on Akamai Cloud (Linode), with the Linode Kubernetes Engine (LKE).
 
+
+Requirements:
+
+A laptop or workstation or vm with terraform installed.
+Linode account with a valid api token with access to Linodes and LKE.
+
+
 The steps to be performed are:
 
-1-From a local workstation or laptop, trigger a terraform tenplate that will create the following:  
+1) From a local workstation or laptop, trigger a terraform tenplate that will create the following:  
 
---> LKE cluster manager that will manage 3 cluster on 3 diferent regions, this one will be on us-west.  
---> 3 LKE agent clusters that will be the ones in which we will directly setup our workloads, each on a different region:  
+1.1) A simple Linode instance from which we will manage the clusters. It does some hardening as disabling ssh root login and creating a custom user name k8s_admin with sudo access. Some generic ssh keys are included, however it is strongly recommended to setup your own.  
+
+1.3 LKE cluster manager that will manage 3 cluster on 3 diferent regions, this one will be on us-west.  
+1.4 3 LKE agent clusters that will be the ones in which we will directly setup our workloads, each on a different region:  
     *us-west  
     *eu-west  
     *ap-south  
