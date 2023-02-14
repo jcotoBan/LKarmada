@@ -1,4 +1,4 @@
-Multicluster MultiRegion with LKE and Karmada.
+MultiCluster MultiRegion with LKE and Karmada.
 ======================
 
 # Overview and High level explanation
@@ -9,7 +9,7 @@ The steps to be performed are:
 
 1-From a local workstation or laptop, trigger a terraform tenplate that will create the following:  
 --> LKE cluster manager that will manage 3 cluster on 3 diferent regions, this one will be on Freemont.  
---> 3 LKE agent clusters that will be 
+--> 3 LKE agent clusters that will be the ones in which we will directly setup our workloads, each on a different region: 
 
 
 ```
@@ -36,3 +36,52 @@ kubectl get secret karmada-kubeconfig \
  -n karmada-system \
  -o jsonpath={.data.kubeconfig} | base64 -d > karmada_config
 ```
+
+```
+ sed -i "s|https://karmada-apiserver.karmada-system.svc.cluster.local:5443|https://$(cat kcip.txt):32443|g" karmada_config
+```
+
+```
+kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..cluster.certificate-authority-data}' | base64 -d > caCrt.pem
+kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..user.client-certificate-data}' | base64 -d > crt.pem
+kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..user.client-key-data}' | base64 -d > key.pem
+```
+
+```
+echo "agent:" >> values.yaml && \
+echo "  kubeconfig:" >> values.yaml && \
+echo "    caCrt: |" >> values.yaml && \
+cat caCrt.pem | sed 's/^/      /' >> values.yaml && \
+echo "    crt: |" >> values.yaml && \
+cat crt.pem | sed 's/^/      /' >> values.yaml && \
+echo "    key: |" >> values.yaml && \
+cat key.pem | sed 's/^/      /' >> values.yaml
+```
+
+```
+helm install karmada karmada-charts/karmada \
+--kubeconfig=kubeconfig_us.yaml \
+--create-namespace --namespace karmada-system \
+--version=1.2.0 \
+--set installMode=agent \
+--set agent.clusterName=us \
+--set agent.kubeconfig.server="https://$(cat kcip.txt):32443" \
+--values values.yaml
+```
+
+```
+helm install karmada karmada-charts/karmada \
+--kubeconfig=kubeconfig_ap.yaml \
+--create-namespace --namespace karmada-system \
+--version=1.2.0 \
+--set installMode=agent \
+--set agent.clusterName=ap \
+--set agent.kubeconfig.server="https://$(cat kcip.txt):32443" \
+--values values.yaml
+```
+
+```
+kubectl apply -f clusterstf/deploymentManifests/protoapp.yaml --kubeconfig=karmada_config
+kubectl apply -f clusterstf/karmadaManifests/policy.yaml --kubeconfig=karmada_config
+```
+
