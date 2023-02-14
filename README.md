@@ -108,6 +108,8 @@ helm install karmada karmada-charts/karmada \
 --set certs.auto.hosts[6]=$(cat kcip.txt)
 ```
 
+Then, we will retrieve the kubeconfig file through which we will manage our clusters:
+
 ```
 kubectl get secret karmada-kubeconfig \
  --kubeconfig=kubeconfig_cluster_manager.yaml \
@@ -115,15 +117,21 @@ kubectl get secret karmada-kubeconfig \
  -o jsonpath={.data.kubeconfig} | base64 -d > karmada_config
 ```
 
+We need to do a slight change on that file, just run:
+
 ```
  sed -i "s|https://karmada-apiserver.karmada-system.svc.cluster.local:5443|https://$(cat kcip.txt):32443|g" karmada_config
 ```
+
+To add each cluster as a karmada agent, we need the certificates of the karmada manager, with this command we will get them:
 
 ```
 kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..cluster.certificate-authority-data}' | base64 -d > caCrt.pem
 kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..user.client-certificate-data}' | base64 -d > crt.pem
 kubectl config view --kubeconfig=karmada_config --minify --raw --output 'jsonpath={..user.client-key-data}' | base64 -d > key.pem
 ```
+
+The following command will add the certificate values to a yaml file called values.yaml, as it is the only way to pass the certificates to the agent chart installation without issues:
 
 ```
 echo "agent:" >> values.yaml && \
@@ -135,6 +143,8 @@ cat crt.pem | sed 's/^/      /' >> values.yaml && \
 echo "    key: |" >> values.yaml && \
 cat key.pem | sed 's/^/      /' >> values.yaml
 ```
+
+Then, we will actually install the agent on each of the clusters. This will allow our karmada manager to start the management of our clusters. We will have to run the command for each of the 3 clusters:
 
 ```
 helm install karmada karmada-charts/karmada \
@@ -149,6 +159,17 @@ helm install karmada karmada-charts/karmada \
 
 ```
 helm install karmada karmada-charts/karmada \
+--kubeconfig=kubeconfig_eu.yaml \
+--create-namespace --namespace karmada-system \
+--version=1.2.0 \
+--set installMode=agent \
+--set agent.clusterName=eu \
+--set agent.kubeconfig.server="https://$(cat kcip.txt):32443" \
+--values values.yaml
+```
+
+```
+helm install karmada karmada-charts/karmada \
 --kubeconfig=kubeconfig_ap.yaml \
 --create-namespace --namespace karmada-system \
 --version=1.2.0 \
@@ -157,6 +178,13 @@ helm install karmada karmada-charts/karmada \
 --set agent.kubeconfig.server="https://$(cat kcip.txt):32443" \
 --values values.yaml
 ```
+
+If everything was followed correctly, at this point you should be able to see the clusters listed from the karmada server:
+
+```
+kubectl get clusters --kubeconfig=karmada_config
+```
+
 
 ```
 kubectl apply -f clusterstf/deploymentManifests/protoapp.yaml --kubeconfig=karmada_config
