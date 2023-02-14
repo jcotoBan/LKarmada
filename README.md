@@ -16,7 +16,7 @@ The steps to be performed are:
 
 ### 1- From a local workstation or laptop, trigger a terraform tenplate that will create the following:  
 
---A simple Linode instance from which we will manage the clusters. It does some hardening as disabling ssh root login and creating a custom user name k8s_admin with sudo access. Some generic ssh keys are included, however it is strongly recommended to setup your own.  
+--A simple Linode instance from which we will manage the clusters. It does some hardening as disabling ssh root login and creating a custom user name k8s_admin with sudo access. Some generic ssh keys are included, however it is strongly recommended to setup your own. It will install kubectl, terraform, helm and karmada chart.  
 
 --LKE cluster manager that will manage 3 cluster on 3 diferent regions, this one will be on us-west.  
 
@@ -27,6 +27,15 @@ The steps to be performed are:
 ### 2- Setup everything related to karmada to start managing the clusters.
 
 ### 3- Deploy a karmada policy and a sample deployment/service.
+
+
+## What is Karmada?
+
+Karmada is a sandbox project of the Cloud Native Computing Foundation (CNCF) that enables you to run your cloud-native applications across multiple Kubernetes clusters and clouds, with no changes to your applications. By speaking Kubernetes-native APIs and providing advanced scheduling capabilities, Karmada enables truly open, multi-cloud Kubernetes.
+
+https://github.com/karmada-io/karmada
+
+
 
 
 ```
