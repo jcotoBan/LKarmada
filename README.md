@@ -185,6 +185,8 @@ If everything was followed correctly, at this point you should be able to see th
 kubectl get clusters --kubeconfig=karmada_config
 ```
 
+![](imgs/clustersc.jpg)
+
 
 ```
 kubectl apply -f clusterstf/deploymentManifests/protoapp.yaml --kubeconfig=karmada_config
