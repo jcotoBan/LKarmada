@@ -14,7 +14,7 @@ Linode account with a valid api token with access to Linodes and LKE.
 
 The general steps to be performed are:
 
-### 1- From a local workstation or laptop, trigger a terraform template that will create the following:  
+### 1- From a local/remote workstation or laptop, trigger a terraform template that will create the following:  
 
 --A simple Linode instance from which we will manage the clusters. It does some hardening as disabling ssh root login and creating a custom user name k8s_admin with sudo access. Some generic ssh keys are included, however it is strongly recommended to setup your own. It will install kubectl, terraform, helm and karmada chart.  
 
