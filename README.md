@@ -201,9 +201,32 @@ rm values.yaml
 
 Then, we will deploy a Sample app to our cluster!
 
+In order to be able to deploy apps through karmada, we require a policy object that dictates how the deployments will be performed across the clusters.  
+For the purpose of this setup, a generic file to split the workload across all clusters was created. Of course, you can fully customize it to suit your needs. Basically is how the replicas of the deployment will be distributed.  
+
+If you change it to use your custom deployment, just make sure the resource selectors are correctly set:
+
+```yaml
+
+resourceSelectors:
+   - apiVersion: apps/v1
+     kind: Deployment
+     name: protoapp
+   - apiVersion: v1
+     kind: Service
+     name: protoappsvc
+```
+
+Then, just issue the following command:
+
+```
+kubectl apply -f clusterstf/karmadaManifests/policy.yaml --kubeconfig=karmada_config
+
+```
+And finally, to get our custom app deployed, just issue:
 
 ```
 kubectl apply -f clusterstf/deploymentManifests/protoapp.yaml --kubeconfig=karmada_config
-kubectl apply -f clusterstf/karmadaManifests/policy.yaml --kubeconfig=karmada_config
-```
+``
+
 
