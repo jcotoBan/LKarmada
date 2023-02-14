@@ -10,9 +10,9 @@ The steps to be performed are:
 1-From a local workstation or laptop, trigger a terraform tenplate that will create the following:  
 --> LKE cluster manager that will manage 3 cluster on 3 diferent regions, this one will be on us-west.  
 --> 3 LKE agent clusters that will be the ones in which we will directly setup our workloads, each on a different region:  
-    -->us-west 
-    -->eu-west 
-    -->ap-south 
+    -->us-west  
+    -->eu-west  
+    -->ap-south  
 
 
 
