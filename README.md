@@ -195,14 +195,23 @@ Since the certs file have decoded sensitive data, make sure you erase them:
 ```bash
 rm caCrt.pem
 rm crt.pem
-rm crt.pem
 rm values.yaml
 ```
+
+If all was set correctly, we should see our 3 clusters from the karmada manager by issuing the following command:
+
+```bash
+kubectl get clusters --kubeconfig=karmada-config
+```  
+
+![](imgs/karmadaoutput.jpg)
 
 Then, we will deploy a Sample app to our cluster!
 
 In order to be able to deploy apps through karmada, we require a policy object that dictates how the deployments will be performed across the clusters.  
 For the purpose of this setup, a generic file to split the workload across all clusters was created. Of course, you can fully customize it to suit your needs. Basically is how the replicas of the deployment will be distributed.  
+
+This object is called "propagation policy", and in this repo it will reside on clusterstf/karmadaManifests/policy.yaml.
 
 If you change it to use your custom deployment, just make sure the resource selectors are correctly set:
 
@@ -220,13 +229,22 @@ resourceSelectors:
 Then, just issue the following command:
 
 ```bash
-kubectl apply -f clusterstf/karmadaManifests/policy.yaml --kubeconfig=karmada_config
+kubectl apply -f clusterstf/deploymentManifests/protoapp.yaml --kubeconfig=karmada_config
+```  
 
-```
-And finally, to get our custom app deployed, just run:
+And finally, to get our custom app deployed, just run the following command to create the propagation policy:
 
 ```bash
-kubectl apply -f clusterstf/deploymentManifests/protoapp.yaml --kubeconfig=karmada_config
-```
+kubectl apply -f clusterstf/karmadaManifests/policy.yaml --kubeconfig=karmada_config
+
+```  
+
+This will create a deployment of 3 replicas, 1 replica on each cluster:
+
+![](imgs/replicas.jpg)
+
+
+
+
 
 
