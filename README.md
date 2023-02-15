@@ -97,7 +97,6 @@ The first Karmada component we are going to install is the karmada server/manage
 helm install karmada karmada-charts/karmada \
 --kubeconfig=kubeconfig_cluster_manager.yaml \
 --create-namespace --namespace karmada-system \
---version=1.2.0 \
 --set apiServer.hostNetwork=false \
 --set apiServer.serviceType=NodePort \
 --set apiServer.nodePort=32443 \
@@ -152,7 +151,6 @@ Then, we will actually install the agent on each of the clusters. This will allo
 helm install karmada karmada-charts/karmada \
 --kubeconfig=kubeconfig_us.yaml \
 --create-namespace --namespace karmada-system \
---version=1.2.0 \
 --set installMode=agent \
 --set agent.clusterName=us \
 --set agent.kubeconfig.server="https://$(cat kcip.txt):32443" \
@@ -163,7 +161,6 @@ helm install karmada karmada-charts/karmada \
 helm install karmada karmada-charts/karmada \
 --kubeconfig=kubeconfig_eu.yaml \
 --create-namespace --namespace karmada-system \
---version=1.2.0 \
 --set installMode=agent \
 --set agent.clusterName=eu \
 --set agent.kubeconfig.server="https://$(cat kcip.txt):32443" \
@@ -174,7 +171,6 @@ helm install karmada karmada-charts/karmada \
 helm install karmada karmada-charts/karmada \
 --kubeconfig=kubeconfig_ap.yaml \
 --create-namespace --namespace karmada-system \
---version=1.2.0 \
 --set installMode=agent \
 --set agent.clusterName=ap \
 --set agent.kubeconfig.server="https://$(cat kcip.txt):32443" \
